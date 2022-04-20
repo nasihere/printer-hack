@@ -1,34 +1,39 @@
 import pystray
+import configparser
+import math
+
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
 from printer import printDoc, printDoc4
 import os
-printIP = os.environ['IP']
-printPort = int(os.environ['PORT']) 
-printDocName = os.environ['FILENAME'] 
-printerName = os.environ['PRINTER_NAME']
+from pathlib import Path
+
+path = Path(__file__)
+ROOT_DIR = path.parent.absolute();
+print(ROOT_DIR)
+config_path = os.path.join(ROOT_DIR, "myfile.ini")
+
+
+Config = configparser.ConfigParser()
+Config.read(config_path)
+
+printIP = Config.get('PRINTER','IP')
+printPort = int(Config.get('PRINTER','PORT')) 
+printDocName = Config.get('PRINTER','FILENAME')
+printerName = Config.get('PRINTER','PRINTER_NAME')
 
 print("ENV", printIP, printPort, printDocName, printerName);
 
 def create_image(width, height, color1, color2):
-    # Generate an image and draw a pattern
-    image = Image.new('RGB', (width, height), color1)
-    dc = ImageDraw.Draw(image)
-    dc.rectangle(
-        (width // 2, 0, width, height // 2),
-        fill=color2)
-    dc.rectangle(
-        (0, height // 2, width // 2, height),
-        fill=color2)
-
+    config_path = os.path.join(ROOT_DIR, "socket-icon.png")
+    image = Image.open(config_path)
     return image
-
 
 # In order for the icon to be displayed, you must provide an icon
 icon = pystray.Icon(
     'RSC',
-    icon=create_image(64, 64, 'black', 'white'), menu=menu(
+    icon=create_image(64, 64, '#ddddff', 'blue'), menu=menu(
            
              item(
                 'Test Printer WINDOWS',
