@@ -32,12 +32,6 @@ icon = pystray.Icon(
              item(
                 'Test Printer WINDOWS',
                 lambda: printDoc2()),
-             item(
-                'Test Printer WINDOWS V2',
-                lambda: printDoc3()),
-             item(
-                'Test Printer WINDOWS V3',
-                lambda: printDoc4()),
             item(
                 'Test Printer MAC',
                 lambda: printDoc())))
