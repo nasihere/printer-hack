@@ -2,31 +2,42 @@ import pystray
 import configparser
 import math
 
+
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
 from printer import printDoc, printDoc4
 import os
 from pathlib import Path
+from sys import platform
+
+o = open('outfile','w')
+
 
 path = Path(__file__)
-ROOT_DIR = path.parent.absolute();
-print(ROOT_DIR)
+
+if platform == "linux" or platform == "linux2":
+    ROOT_DIR = path.parent.absolute()
+elif platform == "darwin":
+    ROOT_DIR = path.parent.absolute() 
+elif platform == "win32":
+    ROOT_DIR = "D:\\"
+
+print(ROOT_DIR, file=o)
+print("APP PATH", ROOT_DIR,  path.parent.absolute(), file=o)
 config_path = os.path.join(ROOT_DIR, "myfile.ini")
 
 
 Config = configparser.ConfigParser()
 Config.read(config_path)
 
-printIP = Config.get('PRINTER','IP')
-printPort = int(Config.get('PRINTER','PORT')) 
 printDocName = Config.get('PRINTER','FILENAME')
 printerName = Config.get('PRINTER','PRINTER_NAME')
 
-print("ENV", printIP, printPort, printDocName, printerName);
+print("INI", printDocName, printerName, file=o);
 
 def create_image(width, height, color1, color2):
-    config_path = os.path.join(ROOT_DIR, "socket-icon.png")
+    config_path = os.path.join(path.parent.absolute(), "socket-icon.png")
     image = Image.open(config_path)
     return image
 
@@ -43,4 +54,5 @@ icon = pystray.Icon(
                 lambda: printDoc(printerName, printDocName))))
 
 
+o.close();
 icon.run()
