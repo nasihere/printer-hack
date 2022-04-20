@@ -1,5 +1,5 @@
 ('/Users/nasz/Documents/tray/build/tray/tray',
- True,
+ False,
  False,
  True,
  None,
@@ -61,7 +61,7 @@
  [],
  False,
  False,
- 1650469455,
- [('run',
-   '/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/PyInstaller/bootloader/Darwin-64bit/run',
+ 1650469807,
+ [('runw',
+   '/Library/Frameworks/Python.framework/Versions/3.10/lib/python3.10/site-packages/PyInstaller/bootloader/Darwin-64bit/runw',
    'EXECUTABLE')])

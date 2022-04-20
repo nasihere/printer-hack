@@ -31,7 +31,7 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,
+    console=False,
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
@@ -47,4 +47,10 @@ coll = COLLECT(
     upx=True,
     upx_exclude=[],
     name='tray',
+)
+app = BUNDLE(
+    coll,
+    name='tray.app',
+    icon=None,
+    bundle_identifier=None,
 )
