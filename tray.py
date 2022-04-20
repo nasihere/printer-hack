@@ -51,7 +51,14 @@ icon = pystray.Icon(
                 lambda: printDoc4(printerName, printDocName)),
             item(
                 'Test Printer MAC',
-                lambda: printDoc(printerName, printDocName))))
+                lambda: printDoc(printerName, printDocName)),
+            item(
+                'Exit',
+                lambda:  exit_action(icon))))
+
+def exit_action(icon):
+    icon.visible = False
+    icon.stop()
 
 
 o.close();
