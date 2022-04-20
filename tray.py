@@ -2,13 +2,14 @@ import pystray
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
-from printer import printDoc, printDoc2, printDoc3, printDoc4
+from printer import printDoc, printDoc4
 import os
 printIP = os.environ['IP']
 printPort = int(os.environ['PORT']) 
 printDocName = os.environ['FILENAME'] 
-printerName = int(os.environ['PRINTER_NAME']) 
-print("ENV", printIP, printPort, printDocName);
+printerName = os.environ['PRINTER_NAME']
+
+print("ENV", printIP, printPort, printDocName, printerName);
 
 def create_image(width, height, color1, color2):
     # Generate an image and draw a pattern
@@ -31,10 +32,10 @@ icon = pystray.Icon(
            
              item(
                 'Test Printer WINDOWS',
-                lambda: printDoc2()),
+                lambda: printDoc4(printerName, printDocName)),
             item(
                 'Test Printer MAC',
-                lambda: printDoc())))
+                lambda: printDoc(printerName, printDocName))))
 
 
 icon.run()
