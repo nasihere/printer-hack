@@ -2,11 +2,12 @@ import pystray
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
-from printer import printDoc, printDoc2;
+from printer import printDoc, printDoc2, printDoc3, printDoc4
 import os
 printIP = os.environ['IP']
 printPort = int(os.environ['PORT']) 
 printDocName = os.environ['FILENAME'] 
+printerName = int(os.environ['PRINTER_NAME']) 
 print("ENV", printIP, printPort, printDocName);
 
 def create_image(width, height, color1, color2):
@@ -29,16 +30,17 @@ icon = pystray.Icon(
     icon=create_image(64, 64, 'black', 'white'), menu=menu(
            
              item(
-                'Test Printer 1',
-                lambda: testPrinter()),
+                'Test Printer WINDOWS',
+                lambda: printDoc2()),
+             item(
+                'Test Printer WINDOWS V2',
+                lambda: printDoc3()),
+             item(
+                'Test Printer WINDOWS V3',
+                lambda: printDoc4()),
             item(
-                'Test Printer 2',
-                lambda: testPrinter2())))
+                'Test Printer MAC',
+                lambda: printDoc())))
 
-# sendMessage("Hello Nasir")
-def testPrinter():
-    printDoc(printIP, printPort, printDocName);
-def testPrinter2():
-    printDoc2(printIP, printPort, printDocName);
-# To finally show you icon, call run
+
 icon.run()
