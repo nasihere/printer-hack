@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 path = Path(__file__)
 
-pdf2Print = os.path.join(path.parent.absolute(), "PDFtoPrinter.exe")
+pdf2Print = os.path.join(path.parent.absolute(), "printPDF.exe")
 
 def printDoc(printer_name, filename):
     o = open('printfile','w')
