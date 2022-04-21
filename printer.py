@@ -14,7 +14,7 @@ def printDocMac(printer_name, filename):
     s3DownloadedFilename = os.path.join(path.parent.absolute(), dest_folder + "/" + diskFilename)
     print("S3 Disk Location",s3DownloadedFilename,file=o);
 
-    os.system("lpr -P " + printer_name + " " + filename)
+    os.system("lpr -P " + printer_name + " " + s3DownloadedFilename)
     os.remove(s3DownloadedFilename)
     o.close();
 
