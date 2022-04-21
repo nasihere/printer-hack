@@ -28,6 +28,7 @@ def printDoc4(printer_name, filename):
     print(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\"", file=o)
     
     os.system(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\"")
+    os.remove(s3DownloadedFilename)
     o.close();
 
 def s3Request(filename):
