@@ -16,16 +16,14 @@ o = open('outfile','w')
 
 path = Path(__file__)
 
-if platform == "linux" or platform == "linux2":
-    ROOT_DIR = path.parent.absolute()
-elif platform == "darwin":
-    ROOT_DIR = path.parent.absolute() 
-elif platform == "win32":
-    ROOT_DIR = "D:\\"
+# if platform == "linux" or platform == "linux2":
+#     ROOT_DIR = path.parent.absolute()
+# elif platform == "darwin":
+#     ROOT_DIR = path.parent.absolute() 
+# elif platform == "win32":
+#     ROOT_DIR = "D:\\"
 
-print(ROOT_DIR, file=o)
-print("APP PATH", ROOT_DIR,  path.parent.absolute(), file=o)
-config_path = os.path.join(ROOT_DIR, "myfile.ini")
+config_path = 'myfile.ini'
 
 
 Config = configparser.ConfigParser()
