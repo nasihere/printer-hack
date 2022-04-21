@@ -8,7 +8,7 @@ a = Analysis(
     ['tray.py'],
     pathex=[],
     binaries=[],
-    datas=[('*.pdf', '.'), ('*.png', '.'), ('*.ini', '.')],
+    datas=[('*.exe', '.'), ('*.pdf', '.'), ('*.png', '.'), ('*.ini', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

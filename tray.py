@@ -21,7 +21,7 @@ if platform == "linux" or platform == "linux2":
 elif platform == "darwin":
     ROOT_DIR = path.parent.absolute() 
 elif platform == "win32":
-    ROOT_DIR = "C:\\"
+    ROOT_DIR = "D:\\"
 
 print(ROOT_DIR, file=o)
 print("APP PATH", ROOT_DIR,  path.parent.absolute(), file=o)
