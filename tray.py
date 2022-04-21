@@ -51,7 +51,7 @@ icon = pystray.Icon(
                 lambda: printDoc4(printerName, printDocName)),
             item(
                 'Test Printer MAC',
-                lambda: printDoc(printerName, printDocMac)),
+                lambda: printDocMac(printerName, printDocName)),
             item(
                 'Exit',
                 lambda:  exit_action(icon))))
