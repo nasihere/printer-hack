@@ -7,10 +7,15 @@ dest_folder="mydownload"
 
 pdf2Print = os.path.join(path.parent.absolute(), "printPDF.exe")
 
-def printDoc(printer_name, filename):
+def printDocMac(printer_name, filename):
     o = open('printfile','w')
-    print("PRINT-MAC",printer_name,filename,file=o);
+    s3Request(filename)
+    diskFilename = filename.split('/')[-1].replace(" ", "_")  # be careful with file names
+    s3DownloadedFilename = os.path.join(path.parent.absolute(), dest_folder + "/" + diskFilename)
+    print("S3 Disk Location",s3DownloadedFilename,file=o);
+
     os.system("lpr -P " + printer_name + " " + filename)
+    os.remove(s3DownloadedFilename)
     o.close();
 
 

@@ -6,7 +6,7 @@ import math
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
-from printer import printDoc, printDoc4
+from printer import printDocMac, printDoc4
 import os
 from pathlib import Path
 from sys import platform
@@ -51,7 +51,7 @@ icon = pystray.Icon(
                 lambda: printDoc4(printerName, printDocName)),
             item(
                 'Test Printer MAC',
-                lambda: printDoc(printerName, printDocName)),
+                lambda: printDoc(printerName, printDocMac)),
             item(
                 'Exit',
                 lambda:  exit_action(icon))))
