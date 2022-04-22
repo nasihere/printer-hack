@@ -5,7 +5,7 @@ import requests
 
 
 def s3download(url:str, dest_folder:str):
-    o = open('s3Log.ini','w')
+    o = open('LOGGER--DOWNLOAD.ini','w')
     if not os.path.exists(dest_folder):
         os.makedirs(dest_folder)  # create folder if it does not exist
 

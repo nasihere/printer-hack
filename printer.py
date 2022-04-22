@@ -5,10 +5,10 @@ from s3download import s3download
 path = Path(__file__)
 dest_folder="mydownload"
 
-pdf2Print = os.path.join(path.parent.absolute(), "printPDF.exe")
+pdf2Print = os.path.join(path.parent.absolute(), "rundll_print.exe")
 
 def printDocMac(printer_name, filename):
-    o = open('printfile','w')
+    o = open('LOGGER--PRINTER','w')
     s3Request(filename)
     diskFilename = filename.split('/')[-1].replace(" ", "_")  # be careful with file names
     s3DownloadedFilename = os.path.join(path.parent.absolute(), dest_folder + "/" + diskFilename)
@@ -20,17 +20,13 @@ def printDocMac(printer_name, filename):
 
 
 def printDoc4(printer_name, filename):
-    o = open('printfile','w')
-    print("S3 Request",filename,file=o);
-
+    o = open('LOGGER--PRINTER','w')
+    print("S3 Request URL",filename,file=o);
     s3Request(filename)
     diskFilename = filename.split('/')[-1].replace(" ", "_")  # be careful with file names
     s3DownloadedFilename = os.path.join(dest_folder + "\\" + diskFilename)
-    print("S3 Disk Location",s3DownloadedFilename,file=o);
-
-    
+    print("S3 Disk Location",s3DownloadedFilename,file=o); 
     print("Printer Driver",pdf2Print,file=o);
-    print(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\"", file=o)
     
     os.system(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\"")
     os.remove(s3DownloadedFilename)

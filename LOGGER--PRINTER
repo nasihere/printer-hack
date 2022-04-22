@@ -1,0 +1,4 @@
+S3 Request https://www.clickdimensions.com/links/TestPDFfile.pdf
+S3 Disk Location mydownload\TestPDFfile.pdf
+Printer Driver D:\Users\NSyed2\Documents\printer-driver\printer-hack\rundll_print.exe
+D:\Users\NSyed2\Documents\printer-driver\printer-hack\rundll_print.exe "mydownload\TestPDFfile.pdf" "HP ENVY Photo 7800 Orya (Local - NSyed2.root.Nasirs-Mac-mini.local )"

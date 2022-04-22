@@ -1,8 +1,7 @@
 import pystray
 import configparser
 import math
-
-
+from whoami import winWhoAmI, macWhoAmI
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
@@ -11,28 +10,29 @@ import os
 from pathlib import Path
 from sys import platform
 
-o = open('outfile','w')
+o = open('LOGGER--OUTPUT','w')
 
 
 path = Path(__file__)
 
-# if platform == "linux" or platform == "linux2":
-#     ROOT_DIR = path.parent.absolute()
-# elif platform == "darwin":
-#     ROOT_DIR = path.parent.absolute() 
-# elif platform == "win32":
-#     ROOT_DIR = "D:\\"
+userid = "NA";
+if platform == "linux" or platform == "linux2":
+    userid = macWhoAmI();
+elif platform == "darwin":
+    userid = macWhoAmI();
+elif platform == "win32":
+    userid = winWhoAmI();
 
 config_path = 'myfile.ini'
 
 
 Config = configparser.ConfigParser()
 Config.read(config_path)
-
 printDocName = Config.get('PRINTER','FILENAME')
 printerName = Config.get('PRINTER','PRINTER_NAME')
 
-print("INI", printDocName, printerName, file=o);
+
+print(userid, printDocName, printerName, file=o);
 
 def create_image(width, height, color1, color2):
     config_path = os.path.join(path.parent.absolute(), "socket-icon.png")
@@ -43,7 +43,9 @@ def create_image(width, height, color1, color2):
 icon = pystray.Icon(
     'RSC',
     icon=create_image(64, 64, '#ddddff', 'blue'), menu=menu(
-           
+            item(
+                'YOU ARE' + userid + "!",
+                lambda: print(userid)),
              item(
                 'Test Printer WINDOWS',
                 lambda: printDoc4(printerName, printDocName)),
