@@ -25,7 +25,7 @@ def printDoc4(printer_name, filename):
 
     s3Request(filename)
     diskFilename = filename.split('/')[-1].replace(" ", "_")  # be careful with file names
-    s3DownloadedFilename = os.path.join(path.parent.absolute(), dest_folder + "\\" + diskFilename)
+    s3DownloadedFilename = os.path.join(dest_folder + "\\" + diskFilename)
     print("S3 Disk Location",s3DownloadedFilename,file=o);
 
     
