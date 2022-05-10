@@ -9,6 +9,11 @@ from printer import printDocMac, printDoc4
 import os
 from pathlib import Path
 from sys import platform
+import asyncio
+import json
+from websocket import ws_run,ws_disconnect
+import threading
+import sys
 
 o = open('LOGGER--OUTPUT','w')
 
@@ -44,7 +49,7 @@ icon = pystray.Icon(
     'RSC',
     icon=create_image(64, 64, '#ddddff', 'blue'), menu=menu(
             item(
-                'YOU ARE' + userid + "!",
+                'YOU ARE ' + userid + "!",
                 lambda: print(userid)),
              item(
                 'Test Printer WINDOWS',
@@ -57,9 +62,30 @@ icon = pystray.Icon(
                 lambda:  exit_action(icon))))
 
 def exit_action(icon):
+    ws_disconnect()
     icon.visible = False
     icon.stop()
+    app.stop()
+    sys.exit()
+    
 
+def recv_websocket(message):
+    
+    print("tray websocket message")
+    print(message)
 
 o.close();
-icon.run()
+# Start the connection
+# asyncio.get_event_loop().run_until_complete(listen(recv_websocket))
+# Create two threads as follows
+
+try:
+   app = threading.Thread(target=icon.run).start()
+   ws_run(recv_websocket)
+#    thread.start_new_thread( asyncio.get_event_loop().run_until_complete()  )
+#    thread.start_new_thread( icon.run())
+except:
+   print("Error: unable to start thread")
+
+while 1:
+   pass

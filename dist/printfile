@@ -1,4 +1,0 @@
-S3 Request https://www.clickdimensions.com/links/TestPDFfile.pdf
-S3 Disk Location mydownload\TestPDFfile.pdf
-Printer Driver D:\Users\NSyed2\AppData\Local\Temp\1\_MEI163922\printPDF.exe
-D:\Users\NSyed2\AppData\Local\Temp\1\_MEI163922\printPDF.exe "mydownload\TestPDFfile.pdf" "HP ENVY Photo 7800 Orya (Local - NSyed2.root.Nasirs-Mac-mini.local )"
