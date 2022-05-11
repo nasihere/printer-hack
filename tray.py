@@ -30,6 +30,7 @@ elif platform == "win32":
 
 config_path = 'myfile.ini'
 
+WS_CONNECTION_ID = ''
 
 Config = configparser.ConfigParser()
 Config.read(config_path)
@@ -49,8 +50,8 @@ icon = pystray.Icon(
     'RSC',
     icon=create_image(64, 64, '#ddddff', 'blue'), menu=menu(
             item(
-                'YOU ARE ' + userid + "!",
-                lambda: print(userid)),
+                'YOU ARE ' + WS_CONNECTION_ID + "!",
+                lambda: print(WS_CONNECTION_ID)),
              item(
                 'Test Printer WINDOWS',
                 lambda: printDoc4(printerName, printDocName)),
@@ -69,10 +70,23 @@ def exit_action(icon):
     sys.exit()
     
 
-def recv_websocket(message):
-    
-    print("tray websocket message")
-    print(message)
+def onWSmessage(msg):
+    print(msg)
+    body = json.loads(msg)
+    _CONNECTIONID = body['connectionId']
+    action = body['action'];
+    if action == "profileMessage":
+        print("Profile COnnection id received")
+    elif action == "printRequest":
+        print("printRequest")
+        link = body['link']
+        printerName = body['printerName']
+        print(f"link {link} printerName {printerName}")
+        # printDoc4(printerName, link)
+
+    print(connectionId)
+
+
 
 o.close();
 # Start the connection
@@ -80,12 +94,13 @@ o.close();
 # Create two threads as follows
 
 try:
-   app = threading.Thread(target=icon.run).start()
-   ws_run(recv_websocket)
+   ws_run(onWSmessage)
+   #icon.run()
+
 #    thread.start_new_thread( asyncio.get_event_loop().run_until_complete()  )
 #    thread.start_new_thread( icon.run())
 except:
    print("Error: unable to start thread")
 
 while 1:
-   pass
+    pass

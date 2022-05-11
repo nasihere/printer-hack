@@ -6,7 +6,8 @@ import asyncio
 import json
 import sys
 
-SOCKET = "wss://g1q8o7g387.execute-api.us-east-2.amazonaws.com/production"
+_CONNECTIONID = ""
+SOCKET = "wss://eelxzvivea.execute-api.us-east-2.amazonaws.com/production"
 
 # The main function that will handle connection and communication 
 # with the server
@@ -16,12 +17,11 @@ async def listen(recv):
     url = SOCKET
     # Connect to the server
     async with websockets.connect(url) as ws:
-        print(ws)
-        await ws.send(json.dumps({"action": "sendMessage", "message":"hello"}))
+        await ws.send(json.dumps({"action": "profileMessage"}))
         # Stay alive forever, listening to incoming msgs
         while not ws_disconnect_flag:
             msg = await ws.recv()
-            print(msg)
+            print("received")
             recv(msg)
 
 def ws_run(recv):
@@ -30,8 +30,21 @@ def ws_run(recv):
 def ws_disconnect():
     ws_disconnect_flag = True
 
-def onmessage(msg):
+
+def onWSmessage(msg):
     print(msg)
+    body = json.loads(msg)
+    action = body['action'];
+    if action == "profileMessage":
+        _CONNECTIONID = body['connectionId']
+        print("Profile COnnection id received")
+    elif action == "printRequest":
+        print("printRequest")
+        link = body['link']
+        printerName = body['printerName']
+        print(f"link {link} printerName {printerName}")
+        # printDoc4(printerName, link)
 
 
-ws_run(onmessage)
+
+ws_run(onWSmessage)
