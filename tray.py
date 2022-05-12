@@ -35,17 +35,9 @@ elif platform == "darwin":
 elif platform == "win32":
     userid = winWhoAmI();
 
-config_path = 'myfile.ini'
-
 WS_CONNECTION_ID = 'NOT'
 
-Config = configparser.ConfigParser()
-Config.read(config_path)
-printDocName = Config.get('PRINTER','FILENAME')
-printerName = Config.get('PRINTER','PRINTER_NAME')
 
-
-print(userid, printDocName, printerName, file=o);
 
 def create_image(width, height, color1, color2):
     config_path = os.path.join(path.parent.absolute(), "socket-icon.png")
@@ -86,20 +78,21 @@ def tray_failure():
     icon.run()
 
 
-def tray_success():
+def tray_success(WS_CONNECTION_ID):
+    print("syccess trey -")
+    print(WS_CONNECTION_ID + " TRAQT")
+    print("syccess trey e")
     icon = pystray.Icon('RSC',icon=create_image(64, 64, '#ddddff', 'blue'), 
         menu=menu(
             item(
-                'LISTENING....',
-                lambda: copy2clip()),
+                'Copy ' + WS_CONNECTION_ID,
+                lambda: copy2clip(WS_CONNECTION_ID)),
             item(
                 'Exit ',
                 lambda: exit_action(icon)),
     ))
     icon.run()
 
-def copy2clip():
-    print("listening...")
 
 
 def onWSmessage(msg):
@@ -112,7 +105,7 @@ def onWSmessage(msg):
         print(WS_CONNECTION_ID,file=o)
         print(userid, file=o)
         o.close()
-        x = threading.Thread(target=tray_success, args=())
+        x = threading.Thread(target=tray_success, args=(WS_CONNECTION_ID,))
         all_threads.append(x)
         x.start()
     elif action == "printRequest":
