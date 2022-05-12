@@ -58,8 +58,7 @@ def exit_action(icon):
     ws_disconnect()
     icon.visible = False
     icon.stop()
-    for t in all_threads:
-        t.stop()
+    os._exit(0)
 
 def printConnectionDetails():
     print("connection details")
