@@ -28,7 +28,7 @@ def printDoc4(printer_name, filename):
     print("S3 Disk Location",s3DownloadedFilename,file=o); 
     print("Printer Driver",pdf2Print,file=o);
     
-    os.system(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\" > /dev/null")
+    os.system(pdf2Print + " \"" + s3DownloadedFilename + "\" \"" + printer_name + "\"")
     os.remove(s3DownloadedFilename)
     o.close();
 

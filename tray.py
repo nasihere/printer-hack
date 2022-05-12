@@ -14,7 +14,14 @@ import json
 from websocket import ws_run,ws_disconnect
 import threading
 import sys
+import time
+import subprocess
 
+def copy2clip(txt):
+    cmd='echo '+txt.strip()+'|clip'
+    return subprocess.check_call(cmd, shell=True)
+
+    
 o = open('LOGGER--OUTPUT','w')
 
 
@@ -30,7 +37,7 @@ elif platform == "win32":
 
 config_path = 'myfile.ini'
 
-WS_CONNECTION_ID = ''
+WS_CONNECTION_ID = 'NOT'
 
 Config = configparser.ConfigParser()
 Config.read(config_path)
@@ -45,62 +52,104 @@ def create_image(width, height, color1, color2):
     image = Image.open(config_path)
     return image
 
+
+def create_red(width, height, color1, color2):
+    config_path = os.path.join(path.parent.absolute(), "socket-red.png")
+    image = Image.open(config_path)
+    return image
+
 # In order for the icon to be displayed, you must provide an icon
-icon = pystray.Icon(
-    'RSC',
-    icon=create_image(64, 64, '#ddddff', 'blue'), menu=menu(
-            item(
-                'YOU ARE ' + WS_CONNECTION_ID + "!",
-                lambda: print(WS_CONNECTION_ID)),
-             item(
-                'Test Printer WINDOWS',
-                lambda: printDoc4(printerName, printDocName)),
-            item(
-                'Test Printer MAC',
-                lambda: printDocMac(printerName, printDocName)),
-            item(
-                'Exit',
-                lambda:  exit_action(icon))))
+
 
 def exit_action(icon):
+    print('quit')
     ws_disconnect()
     icon.visible = False
     icon.stop()
-    app.stop()
-    sys.exit()
-    
+    for t in all_threads:
+        t.stop()
+
+def printConnectionDetails():
+    print("connection details")
+    print(WS_CONNECTION_ID)
+
+def tray_failure():
+    icon = pystray.Icon('RSC',icon=create_red(64, 64, '#ddddff', 'blue'), 
+            menu=menu(
+                item(
+                    'Connect ',
+                    lambda: restart_app(icon)),
+                item(
+                    'Exit ',
+                    lambda: exit_action(icon)),
+        ))
+    icon.run()
+
+
+def tray_success():
+    icon = pystray.Icon('RSC',icon=create_image(64, 64, '#ddddff', 'blue'), 
+        menu=menu(
+            item(
+                'LISTENING....',
+                lambda: copy2clip()),
+            item(
+                'Exit ',
+                lambda: exit_action(icon)),
+    ))
+    icon.run()
+
+def copy2clip():
+    print("listening...")
+
 
 def onWSmessage(msg):
     print(msg)
     body = json.loads(msg)
-    _CONNECTIONID = body['connectionId']
     action = body['action'];
     if action == "profileMessage":
-        print("Profile COnnection id received")
+        o = open('LOGGER--SOCKET--ID','w')
+        WS_CONNECTION_ID = body['connectionId']
+        print(WS_CONNECTION_ID,file=o)
+        print(userid, file=o)
+        o.close()
+        x = threading.Thread(target=tray_success, args=())
+        all_threads.append(x)
+        x.start()
     elif action == "printRequest":
         print("printRequest")
         link = body['link']
         printerName = body['printerName']
         print(f"link {link} printerName {printerName}")
-        # printDoc4(printerName, link)
-
-    print(connectionId)
-
-
-
+        printDoc4(printerName, link)
+    elif action == "disconnect":
+        print("disconnected")
+        x = threading.Thread(target=tray_failure, args=())
+        all_threads.append(x)
+        x.start()
 o.close();
-# Start the connection
-# asyncio.get_event_loop().run_until_complete(listen(recv_websocket))
-# Create two threads as follows
+
+def restart_app(icon):
+    print("this will run after every 5 sec")
+    icon.stop()
+    
+    time.sleep(5)
+    ws_run(onWSmessage)
+        
+       
+        
+    
+
+all_threads = []
 
 try:
-   ws_run(onWSmessage)
-   #icon.run()
+    print("Waiting for client")
+    ws_run(onWSmessage)
+except KeyboardInterrupt:
+    print("Stopped by Ctrl+C")
+    ws_disconnect()
+    icon.stop()
 
-#    thread.start_new_thread( asyncio.get_event_loop().run_until_complete()  )
-#    thread.start_new_thread( icon.run())
-except:
-   print("Error: unable to start thread")
-
-while 1:
-    pass
+finally:
+    for t in all_threads:
+        t.join()
+    
