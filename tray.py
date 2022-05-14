@@ -1,7 +1,7 @@
 import pystray
 import configparser
 import math
-from whoami import winWhoAmI, macWhoAmI
+from whoami import winWhoAmI, macWhoAmI, registerUserName
 from PIL import Image, ImageDraw
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 # from messengerclient import sendMessage;
@@ -104,6 +104,7 @@ def onWSmessage(msg):
         print(WS_CONNECTION_ID,file=o)
         print(userid, file=o)
         o.close()
+        registerUserName(userid, WS_CONNECTION_ID)
         x = threading.Thread(target=tray_success, args=(WS_CONNECTION_ID,))
         all_threads.append(x)
         x.start()
