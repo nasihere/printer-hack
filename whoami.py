@@ -11,7 +11,7 @@ def macWhoAmI():
 
 def registerUserName(username, WS_CONNECTION_ID):
     print("regiset User Name")
-    url = 'http://localhost:3000/register'
+    url = 'http://ec2-3-132-213-115.us-east-2.compute.amazonaws.com:3002/register'
     myobj = {'username': username.strip(), "connectionId": WS_CONNECTION_ID}
     print(myobj)
     x = requests.post(url, data = myobj)
