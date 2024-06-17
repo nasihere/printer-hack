@@ -1,3 +1,37 @@
+
+// Function to pad text
+function pad(text) {
+    let blockSize = 16;
+    let padLength = blockSize - (text.length % blockSize);
+    return text + String.fromCharCode(padLength).repeat(padLength);
+}
+
+// Function to unpad text
+function unpad(text) {
+    let padLength = text.charCodeAt(text.length - 1);
+    return text.slice(0, -padLength);
+}
+
+// AES encryption
+function aesEncrypt(text, key) {
+    let paddedText = pad(text);
+    let keyBytes = CryptoJS.enc.Utf8.parse(key);
+    let iv = CryptoJS.lib.WordArray.random(16);
+    let encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(paddedText), keyBytes, { iv: iv });
+    return iv.concat(encrypted.ciphertext).toString(CryptoJS.enc.Base64);
+}
+
+// AES decryption
+function aesDecrypt(encryptedText, key) {
+    let keyBytes = CryptoJS.enc.Utf8.parse(key);
+    let data = CryptoJS.enc.Base64.parse(encryptedText);
+    let iv = CryptoJS.lib.WordArray.create(data.words.slice(0, 4));
+    let ciphertext = CryptoJS.lib.WordArray.create(data.words.slice(4));
+    let decrypted = CryptoJS.AES.decrypt({ ciphertext: ciphertext }, keyBytes, { iv: iv });
+    let decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+    return unpad(decryptedText);
+}
+
 function caesarCipherEncrypt(text, shift) {
     let encryptedText = '';
     for (let i = 0; i < text.length; i++) {
