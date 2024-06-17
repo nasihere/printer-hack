@@ -1,0 +1,58 @@
+import { Injectable } from '@angular/core';
+import * as CryptoJS from 'crypto-js';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SimpleCryptoLocalStorageService {
+  private encryptionKey: string = 'your-encryption-key';
+
+  constructor() { }
+
+  // Encrypts the value and stores it in localStorage
+  setItem(key: string, value: any): void {
+    const stringValue = JSON.stringify(value);
+    const encryptedValue = CryptoJS.AES.encrypt(stringValue, this.encryptionKey).toString();
+    localStorage.setItem(key, encryptedValue);
+  }
+
+  // Retrieves the value from localStorage and decrypts it
+  getItem(key: string): any {
+    const encryptedValue = localStorage.getItem(key);
+    if (encryptedValue) {
+      const bytes = CryptoJS.AES.decrypt(encryptedValue, this.encryptionKey);
+      const decryptedValue = bytes.toString(CryptoJS.enc.Utf8);
+      return JSON.parse(decryptedValue);
+    }
+    return null;
+  }
+
+  // Removes the item from localStorage
+  removeItem(key: string): void {
+    localStorage.removeItem(key);
+  }
+
+  // Clears all items from localStorage
+  clear(): void {
+    localStorage.clear();
+  }
+}
+--
+import { Component } from '@angular/core';
+import { SimpleCryptoLocalStorageService } from './simple-crypto-local-storage.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  constructor(private localStorageService: SimpleCryptoLocalStorageService) {
+    // Example usage
+    this.localStorageService.setItem('testKey', { test: 'value' });
+    const value = this.localStorageService.getItem('testKey');
+    console.log(value); // Output: { test: 'value' }
+
+    this.localStorageService.removeItem('testKey');
+  }
+}
