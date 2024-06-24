@@ -1,4 +1,4 @@
-        body {
+ body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
@@ -21,13 +21,13 @@
         .info-box::before {
             content: '';
             position: absolute;
-            top: -10px;
-            right: -10px;
-            bottom: -10px;
-            left: -10px;
-            background: linear-gradient(to bottom right, #e0f7fa, #80deea);
+            top: -20px;
+            right: -20px;
+            bottom: -20px;
+            left: -20px;
+            background: #80deea;
             z-index: -1;
-            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 70%);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
             border-radius: 8px;
         }
 
@@ -54,17 +54,3 @@
         .info-link:hover {
             text-decoration: underline;
         }
-
-
-<div class="info-box">
-        <div class="info-title">Investigation #215303</div>
-        <div class="info-item"><span>Status:</span> Open</div>
-        <div class="info-item"><span>Tier:</span> 1</div>
-        <div class="info-item"><span>Incident Type(s):</span> Excessive Trading, OBA</div>
-        <div class="info-item"><span>Firm Name:</span> Alpha Investments</div>
-        <div class="info-item"><span>Firm ID Number:</span> AI-123456</div>
-        <div class="info-item"><span>Rep Name:</span> John Smith</div>
-        <div class="info-item"><span>Date Received:</span> 4/15/2024</div>
-        <div class="info-item"><span>Date Last Updated:</span> 5/10/2024</div>
-        <a href="#" class="info-link">View Insight</a>
-    </div>
