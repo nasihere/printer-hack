@@ -1,4 +1,5 @@
- body {
+ <style>
+        body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
@@ -9,35 +10,46 @@
             height: 100vh;
         }
 
-        .info-box {
-            position: relative;
-            width: 600px;
-            padding: 20px;
+        .info-container {
             background-color: white;
+            padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             border-radius: 8px;
+            width: 600px;
         }
 
-        .info-box::before {
-            content: '';
-            position: absolute;
-            top: -20px;
-            right: -20px;
-            bottom: -20px;
-            left: -20px;
-            background: #80deea;
-            z-index: -1;
-            clip-path: polygon(0 0, 100% 0, 50% 100%);
-            border-radius: 8px;
-        }
-
-        .info-title {
+        .title {
             font-size: 24px;
-            margin-bottom: 10px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .badges {
+            margin-left: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .badge-open {
+            background-color: #9b59b6; /* Purple */
+        }
+
+        .badge-tier {
+            background-color: #bdc3c7; /* Grey */
+            color: black;
         }
 
         .info-item {
-            margin-bottom: 8px;
+            margin-top: 10px;
         }
 
         .info-item span {
@@ -45,12 +57,31 @@
         }
 
         .info-link {
-            display: block;
-            margin-top: 10px;
-            color: #007bff;
+            color: #3498db;
             text-decoration: none;
         }
 
         .info-link:hover {
             text-decoration: underline;
         }
+    </style>
+</head>
+<body>
+    <div class="info-container">
+        <div class="title">
+            Investigation #215303
+            <div class="badges">
+                <div class="badge badge-open">Open</div>
+                <div class="badge badge-tier">Tier 1</div>
+            </div>
+        </div>
+        <div class="info-item"><span>Incident Type(s):</span> Excessive Trading, OBA</div>
+        <div class="info-item"><span>Stage:</span> Investigation</div>
+        <div class="info-item"><span>Group:</span> Market Regulation</div>
+        <div class="info-item"><span>Firm Name:</span> <a href="#" class="info-link">Alpha Investments</a></div>
+        <div class="info-item"><span>Firm ID Number:</span> AI-123456</div>
+        <div class="info-item"><span>Rep Name:</span> John Smith</div>
+        <div class="info-item"><span>Date Received:</span> 4/15/2024</div>
+        <div class="info-item"><span>Date Last Updated:</span> 5/10/2024</div>
+    </div>
+</body>
