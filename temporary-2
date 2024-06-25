@@ -1,58 +1,56 @@
-import { Injectable } from '@angular/core';
-import * as CryptoJS from 'crypto-js';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class SimpleCryptoLocalStorageService {
-  private encryptionKey: string = 'your-encryption-key';
-
-  constructor() { }
-
-  // Encrypts the value and stores it in localStorage
-  setItem(key: string, value: any): void {
-    const stringValue = JSON.stringify(value);
-    const encryptedValue = CryptoJS.AES.encrypt(stringValue, this.encryptionKey).toString();
-    localStorage.setItem(key, encryptedValue);
-  }
-
-  // Retrieves the value from localStorage and decrypts it
-  getItem(key: string): any {
-    const encryptedValue = localStorage.getItem(key);
-    if (encryptedValue) {
-      const bytes = CryptoJS.AES.decrypt(encryptedValue, this.encryptionKey);
-      const decryptedValue = bytes.toString(CryptoJS.enc.Utf8);
-      return JSON.parse(decryptedValue);
+ body {
+        font-family: Arial, sans-serif;
     }
-    return null;
-  }
+    .menu {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #333;
+    }
+    .menu > li {
+        float: left;
+    }
+    .menu li a {
+        display: block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    .menu li a:hover {
+        background-color: #111;
+    }
+    .submenu {
+        display: none;
+        list-style-type: none;
+        position: absolute;
+        background-color: #333;
+        padding: 0;
+    }
+    .submenu li a {
+        padding: 10px;
+    }
+    .menu li:hover .submenu {
+        display: block;
+    }
+</style>
+</head>
+<body>
 
-  // Removes the item from localStorage
-  removeItem(key: string): void {
-    localStorage.removeItem(key);
-  }
-
-  // Clears all items from localStorage
-  clear(): void {
-    localStorage.clear();
-  }
-}
---
-import { Component } from '@angular/core';
-import { SimpleCryptoLocalStorageService } from './simple-crypto-local-storage.service';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent {
-  constructor(private localStorageService: SimpleCryptoLocalStorageService) {
-    // Example usage
-    this.localStorageService.setItem('testKey', { test: 'value' });
-    const value = this.localStorageService.getItem('testKey');
-    console.log(value); // Output: { test: 'value' }
-
-    this.localStorageService.removeItem('testKey');
-  }
-}
+<ul class="menu">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a>
+        <ul class="submenu">
+            <li><a href="#">Team</a></li>
+            <li><a href="#">Company</a></li>
+        </ul>
+    </li>
+    <li><a href="#">Services</a>
+        <ul class="submenu">
+            <li><a href="#">Web Design</a></li>
+            <li><a href="#">Hosting</a></li>
+        </ul>
+    </li>
+    <li><a href="#">Contact</a></li>
+</ul>
