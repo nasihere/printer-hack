@@ -1,106 +1,90 @@
-export class FeedStore extends IACtorStore {
-  private eventFeedList(data = null) {
-    return data?.investigationWSEvents?.map(this.transformEvent) || [];
-  }
+type Method = 'POST' | 'GET' | 'PUT' | 'DELETE';
 
-  private transformEvent(event) {
-    return {
-      sourceEntity: this.getSourceEntity(event),
-      sourceOriginalEntity: this.getSourceOriginalEntity(event),
-      departmentReceivedDate: this.formatDate(event.sourceData?.departmentReceivedDate),
-      finraReceivedDate: this.formatDate(event?.finraReceivedDate),
-      type: event?.type,
-      lastUpdatedBy: this.getLastUpdatedBy(event),
-      lastUpdatedTime: this.getLastUpdatedTime(event),
-      summary: event?.summary,
-      products: this.transformProducts(event?.products),
-      assignees: this.transformAssignees(event.sourceData?.assignees),
-      causecodes: this.transformCausecodes(event?.causecodes),
-      regulatorySignificance: event?.regulatorySignificance,
-      lastUpdatedDate: this.formatDate(event.sourceData?.lastUpdatedDate),
-      status: event.sourceData?.status,
-      nonRegisteredIndividuals: this.transformIndividuals(event?.nonRegisteredIndividuals),
-      nonRegisteredEntities: this.transformEntities(event?.nonRegisteredEntities),
-      firms: this.transformFirms(event?.potentialRespondentFirms),
-    };
-  }
-
-  private getSourceEntity(event) {
-    return event.sourceData?.owningDepartment;
-  }
-
-  private getSourceOriginalEntity(event) {
-    return event.sourceEntity || emptyDoubleDashes;
-  }
-
-  private formatDate(date) {
-    return date ? formatMMDDYYYY(date) : emptyDoubleDashes;
-  }
-
-  private getLastUpdatedBy(event) {
-    return event.sourceData?.lastUpdatedBy || emptyDoubleDashes;
-  }
-
-  private getLastUpdatedTime(event) {
-    return event.sourceData?.lastUpdatedTime || emptyDoubleDashes;
-  }
-
-  private transformProducts(products) {
-    return products
-      ?.filter(item => item?.name?.length > 0 || item?.symbol?.length > 0)
-      .map(item => ({
-        name: item?.name ? `${item.name} (${appendBracket(item?.symbol)})` : '',
-        linkValue: null,
-        externalUrl: null,
-        nonLinkValue: item,
-      })) || [];
-  }
-
-  private transformAssignees(assignees) {
-    return assignees
-      ?.filter(item => item?.isPrimary)
-      .map(item => ({
-        name: this.getFullName(item?.name),
-        linkValue: null,
-        externalUrl: null,
-        nonLinkValue: item,
-      })) || [];
-  }
-
-  private getFullName(name) {
-    return `${name?.firstName || ''} ${name?.middleName || ''} ${name?.lastName || ''}`.trim();
-  }
-
-  private transformCausecodes(causecodes) {
-    return causecodes?.map(item => ({
-      linkValue: null,
-      externalUrl: null,
-      nonLinkValue: item,
-    })) || [];
-  }
-
-  private transformIndividuals(individuals) {
-    return individuals?.map(item => ({
-      name: this.getFullName(item?.name),
-      linkValue: null,
-      externalUrl: null,
-      nonLinkValue: item,
-    })) || [];
-  }
-
-  private transformEntities(entities) {
-    return entities
-      ?.filter(firm => firm?.name?.length > 0)
-      .map(firm => ({
-        linkValue: null,
-        externalUrl: null,
-        nonLinkValue: firm.name,
-      })) || [];
-  }
-
-  private transformFirms(firms) {
-    return firms?.map(firm => ({
-      nonLinkValue: firm.name,
-    })) || [];
-  }
+interface Request {
+    bulkId: string;
+    method: Method;
+    path: string;
+    body?: any;
 }
+
+interface AssignmentRequest {
+    subject: { id: string, subjectType: string };
+    role: { code: string };
+    primary: boolean;
+}
+
+interface MatterData {
+    name: string;
+    createActivity: boolean;
+    typeCode: string;
+    description: string;
+    finraReceivedDate: string;
+    organization: { code: string };
+    categories: { code: string }[];
+    assignmentRequests: AssignmentRequest[];
+}
+
+class DataBuilder {
+    private requests: Request[] = [];
+
+    createMatter(data: MatterData): DataBuilder {
+        const request: Request = {
+            bulkId: 'create-matter',
+            method: 'POST',
+            path: '/api/v1/matters',
+            body: data
+        };
+        this.requests.push(request);
+        return this;
+    }
+
+    addOrigin(originId: number): DataBuilder {
+        const request: Request = {
+            bulkId: 'add-origin-1',
+            method: 'POST',
+            path: `/api/v1/matters/{bulkId:create-matter}/origins`,
+            body: { originId }
+        };
+        this.requests.push(request);
+        return this;
+    }
+
+    addCause(causeId: number): DataBuilder {
+        const request: Request = {
+            bulkId: `add-cause-${this.requests.filter(r => r.bulkId.startsWith('add-cause')).length + 1}`,
+            method: 'POST',
+            path: '/api/v1/matters/{bulkId:create-matter}/causes',
+            body: { codeId: causeId }
+        };
+        this.requests.push(request);
+        return this;
+    }
+
+    build(): Request[] {
+        return this.requests;
+    }
+}
+
+// Example usage:
+const builder = new DataBuilder();
+const matterData: MatterData = {
+    name: 'The matter name',
+    createActivity: true,
+    typeCode: 'REVIEW',
+    description: '',
+    finraReceivedDate: '2023-10-31',
+    organization: { code: 'THE-IRG-TO-BE-DEFINED-ORGANIZATION' },
+    categories: [{ code: '20TYPE' }],
+    assignmentRequests: [
+        { subject: { id: 'K22204', subjectType: 'USER' }, role: { code: 'ANALYST' }, primary: true },
+        { subject: { id: 'K22204', subjectType: 'USER' }, role: { code: 'MANAGER' }, primary: true }
+    ]
+};
+
+const requests = builder.createMatter(matterData)
+    .addOrigin(3)
+    .addCause(718)
+    .addCause(718)
+    .build();
+
+console.log(JSON.stringify(requests, null, 2));
